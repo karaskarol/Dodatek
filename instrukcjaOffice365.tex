@@ -1,0 +1,114 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[polish]{babel}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{hyperref}
+\usepackage{tocloft}
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Konfiguracja wyglądu spisu treści
+\setlength{\cftbeforesecskip}{4pt}
+\renewcommand{\cftsecfont}{\bfseries}
+\renewcommand{\cftsecpagefont}{\bfseries}
+
+% Konfiguracja środowiska listings
+\lstset{
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  breaklines=true,
+  frame=single,
+  columns=flexible
+}
+
+\title{Przewodnik Instalacji Office~365 z Office Deployment Tool}
+\author{}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Ten dokument zawiera skondensowany, ale kompletny opis kroków potrzebnych do pobrania i instalacji Office~365 przy użyciu Office Deployment Tool (ODT). Każdy etap obejmuje niezbędne informacje i praktyczne wskazówki.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Wymagania wstępne}
+Przed instalacją upewnij się, że:
+\begin{itemize}
+  \item Posiadasz uprawnienia administratora na komputerze.
+  \item Masz stabilne połączenie internetowe.
+  \item Dysk systemowy ma co najmniej 4~GB wolnego miejsca.
+\end{itemize}
+
+\section{Pobranie Office Deployment Tool}
+Office Deployment Tool (ODT) to oficjalne narzędzie Microsoft do niestandardowych instalacji Office.
+\begin{enumerate}
+  \item Przejdź na stronę: \url{https://www.microsoft.com/software-download/office}.
+  \item Pobierz plik \texttt{setup.exe} (aktualna wersja ODT).
+  \item Uruchom go, wybierając folder docelowy (np. \texttt{C:/OfficeSetup}).
+\end{enumerate}
+
+\section{Przygotowanie pliku konfiguracyjnego XML}
+Plik \texttt{Configuration.xml} steruje zawartością instalacji.
+\subsection{Struktura pliku}
+\begin{lstlisting}[language=XML]
+<Configuration>
+  <Add OfficeClientEdition="64" Channel="Current">
+    <Product ID="O365ProPlusRetail">
+      <Language ID="pl-pl"/>
+      <ExcludeApp ID="Access"/>
+      <ExcludeApp ID="Publisher"/>
+    </Product>
+  </Add>
+  <Display Level="Full" AcceptEULA="TRUE"/>
+  <Property Name="AUTOACTIVATE" Value="1"/>
+</Configuration>
+\end{lstlisting}
+
+\subsection{Opis elementów}
+\begin{description}
+  \item[\texttt{OfficeClientEdition}] Wersja 64-bitowa (lub 32).
+  \item[\texttt{Channel}] Gałąź aktualizacji (\texttt{Current}, \texttt{Monthly}, \dots).
+  \item[\texttt{Language}] Język instalacji (tutaj polski).
+  \item[\texttt{ExcludeApp}] Wyłączenie aplikacji Access i Publisher.
+  \item[\texttt{Display}] Poziom widoczności instalatora i akceptacja EULA.
+  \item[\texttt{Property AUTOACTIVATE}] Automatyczna aktywacja produktu.
+\end{description}
+
+\section{Instalacja Office~365}
+\begin{enumerate}
+  \item Otwórz \textbf{Wiersz polecenia} jako administrator.
+  \item Przejdź do katalogu z narzędziem:
+    \begin{lstlisting}
+cd C:/OfficeSetup
+    \end{lstlisting}
+  \item Uruchom polecenie instalacji:
+    \begin{lstlisting}
+setup.exe /configure Configuration.xml
+    \end{lstlisting}
+  \item Poczekaj na zakończenie procesu — pasek postępu wskaże status.
+\end{enumerate}
+
+\section{Weryfikacja poprawności}
+Po zakończeniu:
+\begin{itemize}
+  \item Uruchom np. Microsoft Word.
+  \item W menu \texttt{Plik > Konto} sprawdź wersję (64-bit) i język interfejsu.
+\end{itemize}
+
+\section{Rozwiązywanie problemów}
+Jeśli instalacja się nie powiedzie:
+\begin{itemize}
+  \item Zweryfikuj \texttt{Configuration.xml} pod kątem składni.
+  \item Sprawdź połączenie internetowe.
+  \item Przejrzyj logi w katalogu \texttt{C:/OfficeSetup} (pliki \texttt{*.log}).
+  \item Skorzystaj z dokumentacji: \url{https://docs.microsoft.com/officedeployment}
+\end{itemize}
+
+\end{document}
