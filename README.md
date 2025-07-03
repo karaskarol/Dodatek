@@ -1,0 +1,2 @@
+# Dodatek
+Wszystkie instrukcje .tex
